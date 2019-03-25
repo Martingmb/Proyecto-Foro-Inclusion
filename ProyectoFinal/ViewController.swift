@@ -9,20 +9,14 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-    
-    
-    
+
     @IBOutlet weak var tvTable: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
     @IBOutlet weak var btLeftImage: UIButton!
     @IBOutlet weak var btRightImage: UIButton!
     
     var eventsDummy = [Eventos]()
-    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el eventop numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "halo-2")!)
+    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el eventop numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "fotoDummy")!)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,11 +36,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> TableViewCustomCellEvents {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCustomCellEvents
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: TableViewCustomCellEvents = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
         cell.ivFavorite.image = UIImage(named: "favicon")
         cell.tfTitle.text = eventsDummy[indexPath.row].titulo
-        cell.tfDescription.text = eventsDummy[indexPath.row].description
+        cell.tfDescription.text = eventsDummy[indexPath.row].eventDescription
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
         cell.tfDate.text = dateFormatterGet.string(from: eventsDummy[indexPath.row].fecha)
@@ -56,14 +50,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detail" {
+            print("ENTRE A DETAIL")
             let eventDetail = segue.destination as! EventDetailViewController
             let indexPath = tvTable.indexPathForSelectedRow!
-            eventDetail.ivEventImage.image = eventsDummy[indexPath.row].eventImage
-            eventDetail.lbEventTitle.text = eventsDummy[indexPath.row].titulo
-            eventDetail.lbUbicacion.text = eventsDummy[indexPath.row].eventUbicacion
-            let dateFormatterGet = DateFormatter()
-            dateFormatterGet.dateFormat = "yyyy-MM-dd"
-            eventDetail.lbFecha.text = dateFormatterGet.string(from: eventsDummy[indexPath.row].fecha)
+            eventDetail.evento = eventsDummy[indexPath.row]
             
             
         }

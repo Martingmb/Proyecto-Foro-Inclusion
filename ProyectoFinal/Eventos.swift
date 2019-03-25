@@ -20,7 +20,7 @@ class Eventos: NSObject {
         self.titulo = titulo
         self.fecha = fecha
         self.eventDescription = eventDescription
-        self.eventDescription = eventUbicacion
+        self.eventUbicacion = eventUbicacion
         self.eventImage = eventImage
     }
     

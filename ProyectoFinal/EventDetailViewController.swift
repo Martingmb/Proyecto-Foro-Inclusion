@@ -15,8 +15,17 @@ class EventDetailViewController: UIViewController {
     @IBOutlet weak var lbFecha: UILabel!
     @IBOutlet weak var lbUbicacion: UILabel!
     
+    var evento: Eventos!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ivEventImage.image = evento.eventImage
+        lbEventTitle.text = evento.titulo
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd"
+        lbFecha.text = dateFormatterGet.string(from: evento.fecha)
+        lbUbicacion.text = evento.eventUbicacion
 
         // Do any additional setup after loading the view.
     }
