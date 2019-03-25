@@ -10,6 +10,11 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    
     
     @IBOutlet weak var tvTable: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
@@ -17,11 +22,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var btRightImage: UIButton!
     
     var eventsDummy = [Eventos]()
-    
+    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el eventop numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "halo-2")!)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        eventsDummy.append(event1)
+        tvTable.delegate = self
+        tvTable.dataSource = self
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -34,7 +42,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> TableViewCustomCellEvents {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCustomCellEvents
         cell.ivFavorite.image = UIImage(named: "favicon")
         cell.tfTitle.text = eventsDummy[indexPath.row].titulo
