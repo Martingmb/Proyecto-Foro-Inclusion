@@ -15,35 +15,46 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var btLeftImage: UIButton!
     @IBOutlet weak var btRightImage: UIButton!
     
+    var counter: Int = 0;
     var arrImg = [UIImage(named: "arca"), UIImage(named: "logotec"), UIImage(named: "gitlogo")]
     
     var eventsDummy = [Eventos]()
     var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el evento numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "fotoDummy")!)
-
+    var event2 = Eventos(titulo: "Evento2", fecha: Date(), eventDescription: "Este es el evento numero dos de prueba", eventUbicacion: "Salon 402", eventImage: UIImage(named: "fotoDummy")!)
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         eventsDummy.append(event1)
+        eventsDummy.append(event2)
+        logoSlideshow()
         tvTable.delegate = self
         tvTable.dataSource = self
     }
     
     func logoSlideshow() {
-        var counter: Int = 0;
-        UIView.animate(withDuration: 1, delay: 0, options: .repeat, animations: {
+        
+        UIView.animate(withDuration: 2, delay: 1, options: .curveEaseIn, animations: {
             self.ivSponsors.alpha = 0
-            
         }, completion: {finished in
-            counter += 1
-            if counter == 3 {
-                counter = 0
+            self.counter += 1
+            if self.counter == 3 {
+                self.counter = 0
             }
-            self.changeSponsor(index: counter)
+            self.logoSlideShowFadeIN()
+            self.changeSponsor(index: self.counter)
+            
         })
+    }
+    
+    func logoSlideShowFadeIN() {
+        UIView.animate(withDuration: 3, delay: 1, options: .curveEaseIn, animations: {
+            self.ivSponsors.alpha = 1
+        }, completion: nil)
     }
     
     func changeSponsor(index: Int) {
         ivSponsors.image = arrImg[index]
+        logoSlideshow()
     }
     
     
