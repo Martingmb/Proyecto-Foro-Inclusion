@@ -26,6 +26,8 @@ class EventDetailViewController: UIViewController {
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
         lbFecha.text = dateFormatterGet.string(from: evento.fecha)
         lbUbicacion.text = evento.eventUbicacion
+        
+        title = evento.titulo
 
         // Do any additional setup after loading the view.
     }

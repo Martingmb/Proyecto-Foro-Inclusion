@@ -15,8 +15,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var btLeftImage: UIButton!
     @IBOutlet weak var btRightImage: UIButton!
     
+    var arrImg = [UIImage(named: "arca"), UIImage(named: "logotec"), UIImage(named: "gitlogo")]
+    
     var eventsDummy = [Eventos]()
-    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el eventop numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "fotoDummy")!)
+    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el evento numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "fotoDummy")!)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tvTable.delegate = self
         tvTable.dataSource = self
     }
+    
+    func logoSlideshow() {
+        var counter: Int = 0;
+        UIView.animate(withDuration: 1, delay: 0, options: .repeat, animations: {
+            self.ivSponsors.alpha = 0
+            
+        }, completion: {finished in
+            counter += 1
+            if counter == 3 {
+                counter = 0
+            }
+            self.changeSponsor(index: counter)
+        })
+    }
+    
+    func changeSponsor(index: Int) {
+        ivSponsors.image = arrImg[index]
+    }
+    
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventsDummy.count
