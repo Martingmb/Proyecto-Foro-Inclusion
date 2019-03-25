@@ -68,12 +68,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return 1
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80;
+    }
     
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TableViewCustomCellEvents = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
         cell.ivFavorite.image = UIImage(named: "favicon")
         cell.tfTitle.text = eventsDummy[indexPath.row].titulo
-        cell.tfDescription.text = eventsDummy[indexPath.row].eventDescription
+        // cell.tfDescription.text = eventsDummy[indexPath.row].eventDescription
+        // cell.tfAmbito.text = eventsDummy[indexPath.row]
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
         cell.tfDate.text = dateFormatterGet.string(from: eventsDummy[indexPath.row].fecha)

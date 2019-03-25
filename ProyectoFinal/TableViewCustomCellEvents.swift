@@ -14,8 +14,7 @@ class TableViewCustomCellEvents: UITableViewCell {
     @IBOutlet weak var ivFavorite: UIImageView!
     @IBOutlet weak var tfTitle: UILabel!
     @IBOutlet weak var tfDate: UILabel!
-    @IBOutlet weak var tfDescription: UILabel!
-    
+    @IBOutlet weak var tfAmbito: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
