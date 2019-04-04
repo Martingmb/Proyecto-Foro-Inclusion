@@ -8,9 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol EventMangager {
+    func setFavorite(eventId : Int, favorite: Bool) -> Void
+}
 
-    @IBOutlet weak var tvTable: UITableView!
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager {
+
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
     @IBOutlet weak var btLeftImage: UIButton!
     @IBOutlet weak var btRightImage: UIButton!
@@ -18,21 +22,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var counter: Int = 0;
     var arrImg = [UIImage(named: "arca"), UIImage(named: "logotec"), UIImage(named: "gitlogo")]
     
-    var eventsDummy = [Eventos]()
-    var event1 = Eventos(titulo: "Evento1", fecha: Date(), eventDescription: "Este es el evento numero uno de prueba", eventUbicacion: "TEC", eventImage: UIImage(named: "fotoDummy")!)
-    var event2 = Eventos(titulo: "Evento2", fecha: Date(), eventDescription: "Este es el evento numero dos de prueba", eventUbicacion: "Salon 402", eventImage: UIImage(named: "fotoDummy")!)
+    var eventList : [Event] = []
+    let lorem = "pruba lmao"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        eventsDummy.append(event1)
-        eventsDummy.append(event2)
+        eventList += [
+            Event(eventId: 0, name: "Prueba1", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
+            Event(eventId: 1, name: "Prueba2", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
+            Event(eventId: 2, name: "Prueba3", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
+        ]
         logoSlideshow()
-        tvTable.delegate = self
-        tvTable.dataSource = self
     }
     
     func logoSlideshow() {
-        
         UIView.animate(withDuration: 2, delay: 1, options: .curveEaseIn, animations: {
             self.ivSponsors.alpha = 0
         }, completion: {finished in
@@ -60,7 +64,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return eventsDummy.count
+        return eventList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -74,26 +78,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TableViewCustomCellEvents = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
-        cell.ivFavorite.image = UIImage(named: "favicon")
-        cell.tfTitle.text = eventsDummy[indexPath.row].titulo
-        // cell.tfDescription.text = eventsDummy[indexPath.row].eventDescription
-        // cell.tfAmbito.text = eventsDummy[indexPath.row]
+    
+        let event = eventList[indexPath.row]
+    
+        cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
+        cell.tfTitle.text = event.name
+    
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
-        cell.tfDate.text = dateFormatterGet.string(from: eventsDummy[indexPath.row].fecha)
+        cell.tfDate.text = dateFormatterGet.string(from: event.date)
         
         return cell
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detail" {
-            print("ENTRE A DETAIL")
             let eventDetail = segue.destination as! EventDetailViewController
-            let indexPath = tvTable.indexPathForSelectedRow!
-            eventDetail.evento = eventsDummy[indexPath.row]
-            
-            
+            let indexPath = tableView.indexPathForSelectedRow!
+            eventDetail.evento = eventList[indexPath.row]
+            eventDetail.eventManager = self
         }
+    }
+    
+    
+    func setFavorite(eventId: Int, favorite: Bool) {
+        for i in 0...eventList.count-1 {
+            if(eventList[i].eventId==eventId){
+                eventList[i].favorite = favorite
+                break;
+            }
+        }
+        tableView.reloadData()
+        // ADD TO FAVORITES
     }
 
 

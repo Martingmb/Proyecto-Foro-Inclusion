@@ -8,20 +8,24 @@
 
 import UIKit
 
-class Eventos: NSObject {
+class Event: NSObject {
     
-    var titulo : String = ""
-    var fecha : Date
-    var eventDescription: String = ""
-    var eventUbicacion: String = ""
-    var eventImage: UIImage!
+    var eventId : Int
+    var name : String = ""
+    var date : Date
+    var desc: String = ""
+    var location: String = ""
+    var image: UIImage!
+    var favorite : Bool = false
     
-    init(titulo: String, fecha: Date, eventDescription: String, eventUbicacion: String, eventImage: UIImage) {
-        self.titulo = titulo
-        self.fecha = fecha
-        self.eventDescription = eventDescription
-        self.eventUbicacion = eventUbicacion
-        self.eventImage = eventImage
+    init(eventId: Int, name: String, date: Date, description: String, location: String, image: UIImage, favorite : Bool) {
+        self.eventId = eventId
+        self.name = name
+        self.date = date
+        self.desc = description
+        self.location = location
+        self.image = image
+        self.favorite = favorite
     }
     
 

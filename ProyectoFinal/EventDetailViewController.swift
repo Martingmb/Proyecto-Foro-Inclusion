@@ -15,24 +15,36 @@ class EventDetailViewController: UIViewController {
     @IBOutlet weak var lbFecha: UILabel!
     @IBOutlet weak var lbUbicacion: UILabel!
     
-    var evento: Eventos!
+    @IBOutlet weak var favButton: UIButton!
+    
+    var evento: Event!
+    var eventManager : EventMangager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ivEventImage.image = evento.eventImage
-        lbEventTitle.text = evento.titulo
+        ivEventImage.image = evento.image
+        lbEventTitle.text = evento.name
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
-        lbFecha.text = dateFormatterGet.string(from: evento.fecha)
-        lbUbicacion.text = evento.eventUbicacion
+        lbFecha.text = dateFormatterGet.string(from: evento.date)
+        lbUbicacion.text = evento.location
         
-        title = evento.titulo
+        favButton.imageView?.contentMode = UIView.ContentMode.scaleAspectFill
+        favButton.setImage(UIImage(named: evento.favorite ? "star_gold" : "star_gray"), for: .normal)
+        
+        title = evento.name
 
         // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func setFavorite(_ sender: Any) {
+        let img = evento.favorite ? "star_gray" : "star_gold"
+        favButton.setImage(UIImage(named: img), for: .normal)
+        evento.favorite = !evento.favorite
+        eventManager.setFavorite(eventId: evento.eventId, favorite: evento.favorite)
+    }
+    
     /*
     // MARK: - Navigation
 
