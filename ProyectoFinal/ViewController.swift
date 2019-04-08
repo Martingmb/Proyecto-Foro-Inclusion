@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SideMenu
 
 protocol EventMangager {
     func setFavorite(eventId : Int, favorite: Bool) -> Void
@@ -38,7 +39,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             Event(eventId: 2, name: "Prueba3", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
         ]
         logoSlideshow()
+<<<<<<< HEAD
         
+=======
+
+        SideMenuManager.defaultManager.menuFadeStatusBar = false
+>>>>>>> df1c565cf4aefe2f6f8231f6114a7316e79cc42e
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Buscar evento"
