@@ -27,7 +27,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //Filtering events
     let searchController = UISearchController(searchResultsController: nil)
-    var filteredEvents = [Event]()
+    var filteredEvents : [Event] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +38,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             Event(eventId: 2, name: "Prueba3", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
         ]
         logoSlideshow()
-        
-        
         
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -58,7 +56,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.logoSlideShowFadeIN()
             self.changeSponsor(index: self.counter)
-            
         })
     }
     

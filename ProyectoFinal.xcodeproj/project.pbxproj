@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		418995EA225BD43B00CC7DAD /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418995E9225BD43B00CC7DAD /* SearchViewController.swift */; };
 		5B9CA36222493677007B95F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9CA36122493677007B95F6 /* AppDelegate.swift */; };
 		5B9CA36422493677007B95F6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9CA36322493677007B95F6 /* ViewController.swift */; };
 		5B9CA36722493677007B95F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B9CA36522493677007B95F6 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		418995E9225BD43B00CC7DAD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		5B9CA35E22493677007B95F6 /* ProyectoFinal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProyectoFinal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9CA36122493677007B95F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B9CA36322493677007B95F6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				5B9CA36822493677007B95F6 /* ProyectoFinal.xcdatamodeld */,
 				5B9CA396224944AA007B95F6 /* EventDetailViewController.swift */,
 				5B9CA39822494849007B95F6 /* Eventos.swift */,
+				418995E9225BD43B00CC7DAD /* SearchViewController.swift */,
 			);
 			path = ProyectoFinal;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B9CA36A22493677007B95F6 /* ProyectoFinal.xcdatamodeld in Sources */,
+				418995EA225BD43B00CC7DAD /* SearchViewController.swift in Sources */,
 				5B9CA397224944AA007B95F6 /* EventDetailViewController.swift in Sources */,
 				5B9CA39922494849007B95F6 /* Eventos.swift in Sources */,
 				5B9CA3932249399E007B95F6 /* TableViewCustomCellEvents.swift in Sources */,
