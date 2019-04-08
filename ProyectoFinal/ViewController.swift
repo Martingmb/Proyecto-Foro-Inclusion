@@ -13,7 +13,7 @@ protocol EventMangager {
     func setFavorite(eventId : Int, favorite: Bool) -> Void
 }
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager, UISearchResultsUpdating{
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
@@ -26,6 +26,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var eventList : [Event] = []
     let lorem = "pruba lmao"
     
+    //Filtering events
+    let searchController = UISearchController(searchResultsController: nil)
+    var filteredEvents = [Event]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -35,7 +39,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             Event(eventId: 2, name: "Prueba3", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
         ]
         logoSlideshow()
+
         SideMenuManager.defaultManager.menuFadeStatusBar = false
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Buscar evento"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
     
     func logoSlideshow() {
@@ -64,8 +74,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFiltering(){
+            return filteredEvents.count
+        }
         return eventList.count
     }
     
@@ -80,16 +92,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TableViewCustomCellEvents = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
-    
-        let event = eventList[indexPath.row]
-    
+        //let event = eventList[indexPath.row]
+        let event: Event
+    if isFiltering() {
+        event = filteredEvents[indexPath.row]
+    }
+    else{
+        event = eventList[indexPath.row]
+    }
         cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
         cell.tfTitle.text = event.name
     
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
         cell.tfDate.text = dateFormatterGet.string(from: event.date)
-        
+    
         return cell
     }
     
@@ -97,7 +114,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if segue.identifier == "detail" {
             let eventDetail = segue.destination as! EventDetailViewController
             let indexPath = tableView.indexPathForSelectedRow!
-            eventDetail.evento = eventList[indexPath.row]
+            if isFiltering(){
+                eventDetail.evento = filteredEvents[indexPath.row]
+            }
+            else{
+                eventDetail.evento = eventList[indexPath.row]
+            }
             eventDetail.eventManager = self
         }
     }
@@ -113,7 +135,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.reloadData()
         // ADD TO FAVORITES
     }
+    
+    func updateSearchResults(for searchController: UISearchController){
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+    
+    func searchBarIsEmpty() -> Bool {
+        // Returns true if the text is empty or nil
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+        filteredEvents = eventList.filter({( evento : Event) -> Bool in
+            return evento.name.lowercased().contains(searchText.lowercased())
+        })
+        
+        tableView.reloadData()
+    }
 
+    func isFiltering() -> Bool {
+        return searchController.isActive && !searchBarIsEmpty()
+    }
 
 }
 
