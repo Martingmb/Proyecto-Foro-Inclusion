@@ -24,6 +24,9 @@ class SearchViewController: UIViewController {
         showActions(button: sender as! UIButton, actions: ["Fecha1", "Fecha2", "Fecha3"])
     }
     
+    @IBAction func localFilter(_ sender: Any) {
+        showActions(button: sender as! UIButton, actions: ["Local1", "Local2", "Local3"])
+    }
     func showActions(button : UIButton, actions : [String]){
         let optionMenu = UIAlertController(title: nil, message: "Filtrar", preferredStyle: .actionSheet)
         for i in actions {
