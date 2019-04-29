@@ -19,6 +19,7 @@
 		5B9CA395224942A2007B95F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B9CA394224942A1007B95F6 /* Assets.xcassets */; };
 		5B9CA397224944AA007B95F6 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9CA396224944AA007B95F6 /* EventDetailViewController.swift */; };
 		5B9CA39922494849007B95F6 /* Eventos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9CA39822494849007B95F6 /* Eventos.swift */; };
+		5BA5C0D2227249C80096742F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BA5C0D1227249C70096742F /* GoogleService-Info.plist */; };
 		5BFD43EC7F827FDAA205C2D0 /* Pods_ProyectoFinalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A9EDCD6C0828352F108582 /* Pods_ProyectoFinalTests.framework */; };
 		AF459ECFD6E2E664FF99D84B /* Pods_ProyectoFinalUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4103170535D01D1C55E13C26 /* Pods_ProyectoFinalUITests.framework */; };
 		BED01F2FA1B9E369684561BA /* Pods_ProyectoFinal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F8B13E0021AD2C1FC20FC0B /* Pods_ProyectoFinal.framework */; };
@@ -42,8 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		418995E9225BD43B00CC7DAD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		4103170535D01D1C55E13C26 /* Pods_ProyectoFinalUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProyectoFinalUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		418995E9225BD43B00CC7DAD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		5B9CA35E22493677007B95F6 /* ProyectoFinal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProyectoFinal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9CA36122493677007B95F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B9CA36322493677007B95F6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 		5B9CA394224942A1007B95F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5B9CA396224944AA007B95F6 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
 		5B9CA39822494849007B95F6 /* Eventos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventos.swift; sourceTree = "<group>"; };
+		5BA5C0D1227249C70096742F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5F8B13E0021AD2C1FC20FC0B /* Pods_ProyectoFinal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProyectoFinal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7471D1093DEB04978A69B5B6 /* Pods-ProyectoFinalUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProyectoFinalUITests.debug.xcconfig"; path = "Target Support Files/Pods-ProyectoFinalUITests/Pods-ProyectoFinalUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		79BA0E827C057D7AEE312EBA /* Pods-ProyectoFinalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProyectoFinalTests.debug.xcconfig"; path = "Target Support Files/Pods-ProyectoFinalTests/Pods-ProyectoFinalTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				5B9CA396224944AA007B95F6 /* EventDetailViewController.swift */,
 				5B9CA39822494849007B95F6 /* Eventos.swift */,
 				418995E9225BD43B00CC7DAD /* SearchViewController.swift */,
+				5BA5C0D1227249C70096742F /* GoogleService-Info.plist */,
 			);
 			path = ProyectoFinal;
 			sourceTree = "<group>";
@@ -167,7 +170,6 @@
 				7471D1093DEB04978A69B5B6 /* Pods-ProyectoFinalUITests.debug.xcconfig */,
 				BCA2CF1D747F895CD21BE606 /* Pods-ProyectoFinalUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -290,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B9CA36F22493677007B95F6 /* LaunchScreen.storyboard in Resources */,
+				5BA5C0D2227249C80096742F /* GoogleService-Info.plist in Resources */,
 				5B9CA395224942A2007B95F6 /* Assets.xcassets in Resources */,
 				5B9CA36722493677007B95F6 /* Main.storyboard in Resources */,
 			);
@@ -365,13 +368,19 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProyectoFinal/Pods-ProyectoFinal-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/SideMenu/SideMenu.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenu.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

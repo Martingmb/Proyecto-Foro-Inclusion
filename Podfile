@@ -7,6 +7,8 @@ target 'ProyectoFinal' do
 
   # Pods for ProyectoFinal
   pod 'SideMenu'
+  pod 'Firebase/Core'
+  pod 'Firebase/Database'
 
   target 'ProyectoFinalTests' do
     inherit! :search_paths
