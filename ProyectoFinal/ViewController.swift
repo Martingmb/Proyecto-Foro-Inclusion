@@ -12,10 +12,13 @@ import FirebaseDatabase
 
 protocol EventMangager {
     func setFavorite(eventId : String, favorite: Bool) -> Void
+    func getFavorites() -> [Event]
+    func refreshEvents() -> [Event]
+    func getEvent(eventId: String) -> Event
 }
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager, UISearchResultsUpdating{
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
     @IBOutlet weak var btLeftImage: UIButton!
@@ -26,52 +29,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var arrImg = [UIImage(named: "arca"), UIImage(named: "logotec"), UIImage(named: "gitlogo")]
     
     var eventList : [Event] = []
-    let lorem = "pruba lmao"
-    
-    //Filtering events
-    let searchController = UISearchController(searchResultsController: nil)
-    var filteredEvents : [Event] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         reference = Database.database().reference(fromURL: "https://eventos-tec.firebaseio.com/")
-        let childRef = Database.database().reference().child("eventos")
         
-        childRef.observeSingleEvent(of: .value) { (Data) in
-            let value = Data.value as? NSDictionary
-            let id = value?.allKeys
-            
-            for index in id! {
-                let evento = value?[index] as? NSDictionary
-                let day = evento?["fecha"] as! String
-                let hour = evento?["horario"] as! String
-                let strDate = day + ":" + hour
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd:HH:mm"
-                let date = dateFormatter.date(from: strDate)
-                
-                let eventTest = Event(eventId: index as! String, name: evento?["evento"] as! String, date: date!, description: evento?["ambito"] as! String, location: evento?["lugar"] as! String, image: UIImage(named: "fotoDummy")!, favorite: false)
-                
-                print(eventTest.date)
-            }
-            }
-        
-        eventList += [
-            Event(eventId: "0", name: "Prueba1", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
-            Event(eventId: "1", name: "Prueba2", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
-            Event(eventId: "2", name: "Prueba3", date: Date(), description: lorem, location: "Tec de Monterrey", image: UIImage(named: "fotoDummy")!, favorite: false),
-        ]
         logoSlideshow()
 
+        // Side menu
         SideMenuManager.defaultManager.menuFadeStatusBar = false
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Buscar evento"
-        navigationItem.searchController = searchController
         definesPresentationContext = true
-        
     }
     
     func logoSlideshow() {
@@ -161,26 +129,59 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // ADD TO FAVORITES
     }
     
-    func updateSearchResults(for searchController: UISearchController){
-        filterContentForSearchText(searchController.searchBar.text!)
-    }
-    
-    func searchBarIsEmpty() -> Bool {
-        // Returns true if the text is empty or nil
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
-    
-    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        filteredEvents = eventList.filter({( evento : Event) -> Bool in
-            return evento.name.lowercased().contains(searchText.lowercased())
-        })
+    func getEvent(eventId: String) -> Event {
         
-        tableView.reloadData()
     }
-
-    func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
+    
+    func getFavorites() -> [Event] {
+        var favs : [Event] = []
+        for i in eventList {
+            if(i.favorite){
+                favs.append(i)
+            }
+        }
+        return favs
     }
-
+    
+    func refreshEvents() -> [Event] {
+        let childRef = Database.database().reference().child("eventos")
+        
+        let oldEvents = eventList
+        eventList.removeAll()
+        
+        var favs : [String] = []
+        for i in oldEvents {
+            if(i.favorite){
+                favs.append(i.eventId)
+            }
+        }
+        
+        childRef.observeSingleEvent(of: .value) { (Data) in
+            let value = Data.value as? NSDictionary
+            let id = value?.allKeys
+            
+            for index in id! {
+                let evento = value?[index] as? NSDictionary
+                let day = evento?["fecha"] as! String
+                let hour = evento?["horario"] as! String
+                let strDate = day + ":" + hour
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd:HH:mm"
+                let date = dateFormatter.date(from: strDate)
+                
+                let eventTest = Event(eventId: index as! String, name: evento?["evento"] as! String, date: date!, description: evento?["ambito"] as! String, location: evento?["lugar"] as! String, image: UIImage(named: "fotoDummy")!, favorite: false)
+                self.eventList.append(eventTest)
+            }
+            // Marcar los favoritos pasados
+            for i in favs{
+                if let ix = self.eventList.first(where: {$0.eventId == i }){
+                    print(ix)
+                }
+            }
+        }
+        
+    }
+   
 }
 
