@@ -14,10 +14,10 @@ protocol EventMangager {
     func setFavorite(eventId : String, favorite: Bool) -> Void
     func getFavorites() -> [Event]
     func refreshEvents() -> [Event]
-    func getEvent(eventId: String) -> Event
+    func getEvent(eventId: String) -> Event?
 }
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager, UISearchResultsUpdating{
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager{
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
@@ -36,6 +36,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         reference = Database.database().reference(fromURL: "https://eventos-tec.firebaseio.com/")
         
         logoSlideshow()
+        refreshEvents()
 
         // Side menu
         SideMenuManager.defaultManager.menuFadeStatusBar = false
@@ -68,9 +69,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering(){
-            return filteredEvents.count
-        }
         return eventList.count
     }
     
@@ -86,13 +84,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TableViewCustomCellEvents = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
         //let event = eventList[indexPath.row]
-        let event: Event
-    if isFiltering() {
-        event = filteredEvents[indexPath.row]
-    }
-    else{
-        event = eventList[indexPath.row]
-    }
+        let event = eventList[indexPath.row]
         cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
         cell.tfTitle.text = event.name
     
@@ -107,12 +99,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if segue.identifier == "detail" {
             let eventDetail = segue.destination as! EventDetailViewController
             let indexPath = tableView.indexPathForSelectedRow!
-            if isFiltering(){
-                eventDetail.evento = filteredEvents[indexPath.row]
-            }
-            else{
-                eventDetail.evento = eventList[indexPath.row]
-            }
+            eventDetail.evento = eventList[indexPath.row]
             eventDetail.eventManager = self
         }
     }
@@ -129,8 +116,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // ADD TO FAVORITES
     }
     
-    func getEvent(eventId: String) -> Event {
-        
+    func getEvent(eventId: String) -> Event? {
+        for i in eventList {
+            if(i.eventId == eventId) {
+                return i
+            }
+        }
+        return nil
     }
     
     func getFavorites() -> [Event] {
@@ -179,8 +171,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     print(ix)
                 }
             }
+            self.tableView.reloadData()
         }
-        
+        return eventList
     }
    
 }
