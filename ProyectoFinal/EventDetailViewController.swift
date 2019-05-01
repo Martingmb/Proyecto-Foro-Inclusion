@@ -10,27 +10,35 @@ import UIKit
 import EventKit
 import EventKitUI
 
+protocol FavoriteListener {
+    func onFavoriteChange(eventId : String, favorite : Bool) -> Void
+}
+
 class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
 
-    @IBOutlet weak var ivEventImage: UIImageView!
-    @IBOutlet weak var lbEventTitle: UILabel!
-    @IBOutlet weak var lbFecha: UILabel!
-    @IBOutlet weak var lbUbicacion: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var ambitoLabel: UILabel!
+    @IBOutlet weak var discapacidadLabel: UILabel!
     
     @IBOutlet weak var favButton: UIButton!
     
     var evento: Event!
     var eventManager : EventMangager!
+    var favoriteListener : FavoriteListener?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // ivEventImage.image = evento.image
-        lbEventTitle.text = evento.name
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd"
-        lbFecha.text = dateFormatterGet.string(from: evento.date)
-        lbUbicacion.text = evento.location
+        titleLabel.text = evento.name
+        locationLabel.text = evento.location
+        ambitoLabel.text = evento.ambito
+        discapacidadLabel.text = evento.discapacidad
+        
+        let df = DateFormatter()
+        df.dateFormat = "dd/MMM/YY - hh:mm a"
+        dateLabel.text = df.string(from: evento.date)
         
         favButton.imageView?.contentMode = UIView.ContentMode.scaleAspectFill
         favButton.setImage(UIImage(named: evento.favorite ? "star_gold" : "star_gray"), for: .normal)
@@ -45,6 +53,7 @@ class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
         favButton.setImage(UIImage(named: img), for: .normal)
         evento.favorite = !evento.favorite
         eventManager.setFavorite(eventId: evento.eventId, favorite: evento.favorite)
+        favoriteListener?.onFavoriteChange(eventId: evento.eventId, favorite: evento.favorite)
     }
     
     @IBAction func onAssistClick(_ sender: Any) {

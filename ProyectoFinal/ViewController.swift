@@ -16,7 +16,7 @@ protocol EventMangager {
     func refreshEvents() -> [Event]
     func getEvent(eventId: String) -> Event?
     func getEvents() -> [Event]
-    func getFilteredEvents(ambito: String?, discapacidad: String?, fecha: Date?) -> [Event]
+    func getFilteredEvents(text : String, ambito: String?, discapacidad: String?, fecha: Date?) -> [Event]
 }
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager{
@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var btLeftImage: UIButton!
     @IBOutlet weak var btRightImage: UIButton!
     var reference: DatabaseReference!
+    var refreshControl : UIRefreshControl!
     
     var counter: Int = 0;
     var arrImg = [UIImage(named: "arca"), UIImage(named: "logotec"), UIImage(named: "gitlogo")]
@@ -37,11 +38,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Do any additional setup after loading the view, typically from a nib.
         reference = Database.database().reference(fromURL: "https://eventos-tec.firebaseio.com/")
         
+        refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshControlEvents(_:)), for: .valueChanged)
+        
         logoSlideshow()
-        refreshEvents()
+        let _ = refreshEvents()
 
         // Side menu
         SideMenuManager.defaultManager.menuFadeStatusBar = false
+        
         definesPresentationContext = true
     }
     
@@ -90,9 +96,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
         cell.tfTitle.text = event.name
     
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd"
-        cell.tfDate.text = dateFormatterGet.string(from: event.date)
+        let df = DateFormatter()
+        df.dateFormat = "dd/MMM/YY"
+        cell.tfDate.text = df.string(from: event.date)
     
         return cell
     }
@@ -106,7 +112,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         } else if segue.identifier == "filter" {
             let vc = segue.destination as! SearchViewController
             vc.eventManager = self
+        } else if segue.identifier == "sideMenu" {
+            let nc = segue.destination as! UISideMenuNavigationController
+            let vc = nc.viewControllers.first as! SideMenuTableViewController
+            vc.eventManager = self
         }
+    }
+    
+    func getFavoritesPath() -> String{
+        return FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("favorites.plist").path
     }
     
     
@@ -118,7 +132,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         tableView.reloadData()
-        // ADD TO FAVORITES
+        
+        // Guardar favoritos en un plist
+        
+        let array : NSMutableArray = []
+        for i in eventList{
+            if(i.favorite){
+                array.add(i.eventId)
+            }
+        }
+        
+        array.write(toFile: getFavoritesPath(), atomically: true)
     }
     
     func getEvent(eventId: String) -> Event? {
@@ -147,14 +171,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func refreshEvents() -> [Event] {
         let childRef = Database.database().reference().child("eventos")
         
-        let oldEvents = eventList
         eventList.removeAll()
+        refreshControl.beginRefreshing()
         
-        var favs : [String] = []
-        for i in oldEvents {
-            if(i.favorite){
-                favs.append(i.eventId)
-            }
+        var favs : NSArray = []
+        if(FileManager.default.fileExists(atPath: getFavoritesPath())){
+            favs = NSArray(contentsOfFile: getFavoritesPath())!
         }
         
         childRef.observeSingleEvent(of: .value) { (Data) in
@@ -176,18 +198,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             // Marcar los favoritos pasados
             for i in favs{
-                if let ix = self.eventList.first(where: {$0.eventId == i }){
-                    print(ix)
+                if let ix = self.eventList.first(where: {$0.eventId == (i as! String) }){
+                    ix.favorite = true
                 }
             }
+            self.refreshControl.endRefreshing()
             self.tableView.reloadData()
         }
         return eventList
     }
     
-    func getFilteredEvents(ambito: String?, discapacidad: String?, fecha: Date?) -> [Event] {
+    func getFilteredEvents(text : String, ambito: String?, discapacidad: String?, fecha: Date?) -> [Event] {
         return eventList.filter({ (e) -> Bool in
-            var a = true, d = true, f = true
+            var a = true, d = true, f = true, t = true
             if (ambito != nil) {
                 a = e.ambito == ambito
             }
@@ -200,8 +223,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 df.dateFormat = "dd/MMM/YY"
                 f = df.string(from: e.date) == df.string(from: fecha!)
             }
-            return a && d && f
+            if(text.count>0){
+                t = e.name.uppercased().contains(text.uppercased())
+            }
+            return a && d && f && t
         })
+    }
+    
+    
+    @objc func refreshControlEvents(_ sender: Any){
+        refreshEvents()
     }
     
 }

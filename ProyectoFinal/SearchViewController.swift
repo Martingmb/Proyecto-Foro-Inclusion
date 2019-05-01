@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDataSource, UIPickerViewDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDataSource, UIPickerViewDelegate, UISearchBarDelegate, FavoriteListener {
 
     var eventManager : EventMangager!
     
@@ -17,6 +17,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var pickerDefaultY : CGFloat = CGFloat(0)
     var filteredEvents : [Event] = []
@@ -24,7 +25,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var setFilters : [String?] = [nil, nil]
     var setFilterDate : Date? = nil
     var filterData = [
-        ["Cualquiera", "hehe"],
+        ["Cualquiera"],
         ["Cualquiera"]
     ]
     var changingFilter = 0
@@ -98,7 +99,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.tfAmbito.text = event.ambito
             
             let dateFormatterGet = DateFormatter()
-            dateFormatterGet.dateFormat = "dd/MMM/YY"
+            dateFormatterGet.dateFormat = "dd/MMM/YY - h:mm a"
             cell.tfDate.text = dateFormatterGet.string(from: event.date)
             return cell
         }
@@ -109,7 +110,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func refreshEvents(){
-        filteredEvents = eventManager.getFilteredEvents(ambito: setFilters[0], discapacidad: setFilters[1], fecha: setFilterDate)
+        filteredEvents = eventManager.getFilteredEvents(text: searchBar.text!, ambito: setFilters[0], discapacidad: setFilters[1], fecha: setFilterDate)
         eventTableView.reloadData()
     }
     
@@ -117,9 +118,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: Picker
     
     @objc func hidePickers(){
-//        UIView.animate(withDuration: 0.5) {
-//            self.picker.frame.origin.y = self.view.bounds.size.height+250
-//        }
         picker.isHidden = true
         datePicker.isHidden = true
         filterTableView.deselectRow(at: IndexPath(row: changingFilter, section: 0), animated: true)
@@ -130,12 +128,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func showPicker(data : [String]){
-//        UIView.animate(withDuration: 0.5) {
-//            self.picker.frame.origin.y = self.pickerDefaultY
-//
-//            self.view.layoutIfNeeded()
-//        }
-//        self.view.layoutIfNeeded()
         pickerData = data
         picker.reloadAllComponents()
         picker.isHidden = false
@@ -167,6 +159,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         refreshEvents()
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        refreshEvents()
+    }
+    
+    
+    
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -174,7 +172,20 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let vc = segue.destination as! EventDetailViewController
             vc.eventManager = self.eventManager
             vc.evento = filteredEvents[(eventTableView.indexPathForSelectedRow?.row)!]
+            vc.favoriteListener = self
         }
     }
+    
+    // MARK: - Favorite Listener
 
+    func onFavoriteChange(eventId: String, favorite: Bool) {
+        for i in filteredEvents {
+            if(i.eventId == eventId){
+                i.favorite = favorite
+                break
+            }
+        }
+        eventTableView.reloadData()
+    }
+    
 }
