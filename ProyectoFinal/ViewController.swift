@@ -15,6 +15,8 @@ protocol EventMangager {
     func getFavorites() -> [Event]
     func refreshEvents() -> [Event]
     func getEvent(eventId: String) -> Event?
+    func getEvents() -> [Event]
+    func getFilteredEvents(ambito: String?, discapacidad: String?, fecha: Date?) -> [Event]
 }
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EventMangager{
@@ -101,6 +103,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let indexPath = tableView.indexPathForSelectedRow!
             eventDetail.evento = eventList[indexPath.row]
             eventDetail.eventManager = self
+        } else if segue.identifier == "filter" {
+            let vc = segue.destination as! SearchViewController
+            vc.eventManager = self
         }
     }
     
@@ -135,6 +140,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return favs
     }
     
+    func getEvents() -> [Event] {
+        return eventList
+    }
+    
     func refreshEvents() -> [Event] {
         let childRef = Database.database().reference().child("eventos")
         
@@ -162,7 +171,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 dateFormatter.dateFormat = "yyyy-MM-dd:HH:mm"
                 let date = dateFormatter.date(from: strDate)
                 
-                let eventTest = Event(eventId: index as! String, name: evento?["evento"] as! String, date: date!, description: evento?["ambito"] as! String, location: evento?["lugar"] as! String, image: UIImage(named: "fotoDummy")!, favorite: false)
+                let eventTest = Event(eventId: index as! String, name: evento?["evento"] as! String, date: date!, ambito: evento?["ambito"] as! String, location: evento?["lugar"] as! String, discapacidad: evento?["discapacidad"] as! String, favorite: false)
                 self.eventList.append(eventTest)
             }
             // Marcar los favoritos pasados
@@ -175,6 +184,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         return eventList
     }
-   
+    
+    func getFilteredEvents(ambito: String?, discapacidad: String?, fecha: Date?) -> [Event] {
+        return eventList.filter({ (e) -> Bool in
+            var a = true, d = true, f = true
+            if (ambito != nil) {
+                a = e.ambito == ambito
+            }
+            if(discapacidad != nil){
+                d = e.discapacidad == discapacidad
+            }
+            if(fecha != nil){
+                // Esto es una tonteria pero funciona.
+                let df = DateFormatter()
+                df.dateFormat = "dd/MMM/YY"
+                f = df.string(from: e.date) == df.string(from: fecha!)
+            }
+            return a && d && f
+        })
+    }
+    
 }
 

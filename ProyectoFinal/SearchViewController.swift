@@ -10,6 +10,8 @@ import UIKit
 
 class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDataSource, UIPickerViewDelegate {
 
+    var eventManager : EventMangager!
+    
     @IBOutlet weak var filterTableView: UITableView!
     @IBOutlet weak var eventTableView: UITableView!
     
@@ -17,11 +19,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var datePicker: UIDatePicker!
     
     var pickerDefaultY : CGFloat = CGFloat(0)
-    var filteredEvents = [1, 2, 3]
+    var filteredEvents : [Event] = []
     var filters = ["Ambito", "Discapacidad", "Fecha"]
+    var setFilters : [String?] = [nil, nil]
+    var setFilterDate : Date? = nil
     var filterData = [
-        ["ambito", "ambito111", "222lmaaa"],
-        ["hehe", "hoho", "lmao"]
+        ["Cualquiera", "hehe"],
+        ["Cualquiera"]
     ]
     var changingFilter = 0
     var pickerData : [String] = []
@@ -41,6 +45,14 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tapGesture.cancelsTouchesInView = false
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
+        
+        filteredEvents = eventManager.getEvents()
+        filterData[0] += filteredEvents.map({ (e) -> String in
+            return e.ambito
+        })
+        filterData[1] += filteredEvents.map({ (e) -> String in
+            return e.discapacidad
+        })
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -57,6 +69,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 showPicker(data: filterData[indexPath.row])
             }
             changingFilter = indexPath.row
+        }else{
+            eventTableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
@@ -78,15 +92,25 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return cell
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as! TableViewCustomCellEvents
-//            cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
-            cell.ivFavorite.image = UIImage(named: "star_gray")
-            cell.tfTitle.text = "Test"
+            let event = filteredEvents[indexPath.row]
+            cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
+            cell.tfTitle.text = event.name
+            cell.tfAmbito.text = event.ambito
             
             let dateFormatterGet = DateFormatter()
             dateFormatterGet.dateFormat = "dd/MMM/YY"
-            cell.tfDate.text = dateFormatterGet.string(from: Date())
+            cell.tfDate.text = dateFormatterGet.string(from: event.date)
             return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView == eventTableView ? 80 : 44
+    }
+    
+    func refreshEvents(){
+        filteredEvents = eventManager.getFilteredEvents(ambito: setFilters[0], discapacidad: setFilters[1], fecha: setFilterDate)
+        eventTableView.reloadData()
     }
     
     
@@ -127,6 +151,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         filterTableView.cellForRow(at: IndexPath(row: changingFilter, section: 0))?.detailTextLabel?.text = pickerData[row]
+        setFilters[changingFilter] = row == 0 ? nil : pickerData[row]
+        refreshEvents()
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -137,17 +163,18 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let df = DateFormatter()
         df.dateFormat = "dd/MMM/YY"
         filterTableView.cellForRow(at: IndexPath(row: changingFilter, section: 0))?.detailTextLabel?.text = df.string(from: picker.date)
+        setFilterDate = picker.date
+        refreshEvents()
     }
     
-    
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if(segue.identifier == "showEvent"){
+            let vc = segue.destination as! EventDetailViewController
+            vc.eventManager = self.eventManager
+            vc.evento = filteredEvents[(eventTableView.indexPathForSelectedRow?.row)!]
+        }
     }
-    */
 
 }

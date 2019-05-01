@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import EventKit
+import EventKitUI
 
-class EventDetailViewController: UIViewController {
+class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
 
     @IBOutlet weak var ivEventImage: UIImageView!
     @IBOutlet weak var lbEventTitle: UILabel!
@@ -23,7 +25,7 @@ class EventDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ivEventImage.image = evento.image
+        // ivEventImage.image = evento.image
         lbEventTitle.text = evento.name
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
@@ -44,6 +46,30 @@ class EventDetailViewController: UIViewController {
         evento.favorite = !evento.favorite
         eventManager.setFavorite(eventId: evento.eventId, favorite: evento.favorite)
     }
+    
+    @IBAction func onAssistClick(_ sender: Any) {
+        let store = EKEventStore()
+        
+        store.requestAccess(to: EKEntityType.event) { (granted : Bool, error : Error?) in
+            let event = EKEvent(eventStore: store)
+            event.title = self.evento.name
+            event.startDate = self.evento.date
+            event.endDate = self.evento.date.addingTimeInterval(30*60)
+            event.location = self.evento.location
+            event.notes = "Ambito: \(self.evento.ambito)\nDiscapacidad: \(self.evento.discapacidad)\n(Fecha final no fija)"
+            
+            let controller = EKEventEditViewController()
+            controller.event = event
+            controller.eventStore = store
+            controller.editViewDelegate = self
+            self.present(controller, animated: true)
+        }
+    }
+    
+    func eventEditViewController(_ controller: EKEventEditViewController, didCompleteWith action: EKEventEditViewAction) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
     
     /*
     // MARK: - Navigation
