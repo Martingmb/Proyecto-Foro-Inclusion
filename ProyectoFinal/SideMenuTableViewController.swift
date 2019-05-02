@@ -20,13 +20,8 @@ class SideMenuTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         cellFavs.accessibilityLabel = "Mis Favoritos"
-        
         cellFavs.accessibilityHint = "Toca dos veces para ir a tu lista de favoritos"
-        
-        
-        
     }
 
     // MARK: - Navigation
@@ -34,6 +29,19 @@ class SideMenuTableViewController: UITableViewController {
         if(segue.identifier == "favorites"){
             let vc = segue.destination as! FavoritesTableViewController
             vc.eventManager = eventManager
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(indexPath.row==1){
+            guard var settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            settingsUrl.appendPathComponent("root=General&path=ACCESSIBILITY")
+            print(settingsUrl)
+            if UIApplication.shared.canOpenURL(settingsUrl){
+                UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+            }
         }
     }
 
