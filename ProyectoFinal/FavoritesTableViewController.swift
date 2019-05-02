@@ -58,12 +58,7 @@ class FavoritesTableViewController: UITableViewController, FavoriteListener {
     }
     
     func onFavoriteChange(eventId: String, favorite: Bool) {
-        for i in favorites {
-            if(i.eventId == eventId){
-                i.favorite = favorite
-                break
-            }
-        }
+        favorites = eventManager.getFavorites()
         tableView.reloadData()
     }
 
