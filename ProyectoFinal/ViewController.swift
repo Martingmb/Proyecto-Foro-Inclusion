@@ -69,7 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func logoSlideshow() {
-        UIView.animate(withDuration: 2, delay: 1, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 2, delay: 0, options: .curveEaseIn, animations: {
             self.ivSponsors.alpha = 0
         }, completion: {finished in
             self.counter += 1
@@ -98,12 +98,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80;
+        return 90;
     }
     
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,6 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let event = eventList[indexPath.row]
         cell.ivFavorite.image = UIImage(named: event.favorite ? "star_gold" : "star_gray")
         cell.tfTitle.text = event.name
+        cell.tfAmbito.text = event.ambito
     
         let df = DateFormatter()
         df.locale = Locale(identifier: "es-MX")
@@ -127,6 +127,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let indexPath = tableView.indexPathForSelectedRow!
             eventDetail.evento = eventList[indexPath.row]
             eventDetail.eventManager = self
+            tableView.deselectRow(at: indexPath, animated: true)
         } else if segue.identifier == "filter" {
             let vc = segue.destination as! SearchViewController
             vc.eventManager = self

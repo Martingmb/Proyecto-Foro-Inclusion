@@ -113,7 +113,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView == eventTableView ? 80 : 44
+        return tableView == eventTableView ? 90 : 44
     }
     
     func refreshEvents(){
