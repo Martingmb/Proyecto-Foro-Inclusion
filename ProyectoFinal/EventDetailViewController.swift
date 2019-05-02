@@ -22,6 +22,7 @@ class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
     @IBOutlet weak var ambitoLabel: UILabel!
     @IBOutlet weak var discapacidadLabel: UILabel!
     
+    @IBOutlet weak var btAsistir: UIButton!
     @IBOutlet weak var favButton: UIButton!
     
     var evento: Event!
@@ -37,13 +38,20 @@ class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
         discapacidadLabel.text = evento.discapacidad
         
         let df = DateFormatter()
-        df.dateFormat = "dd/MMM/YY - hh:mm a"
+        df.locale = Locale(identifier: "es-MX")
+        df.dateFormat = "EEEE, MMM d - hh:mm a"
+        
         dateLabel.text = df.string(from: evento.date)
         
         favButton.imageView?.contentMode = UIView.ContentMode.scaleAspectFill
         favButton.setImage(UIImage(named: evento.favorite ? "star_gold" : "star_gray"), for: .normal)
         
         title = evento.name
+        
+        favButton.accessibilityLabel = evento.favorite ? "Si es favorito" : "No es favorito"
+        favButton.accessibilityHint = evento.favorite ? "Toca dos veces para eliminar de favoritos" : "Toca dos veces para añadir a favoritos"
+        btAsistir.accessibilityLabel = "Asistir al evento"
+        btAsistir.accessibilityHint = "Toca dos veces para añadir el evento a tu calendario"
 
         // Do any additional setup after loading the view.
     }
@@ -54,6 +62,8 @@ class EventDetailViewController: UIViewController, EKEventEditViewDelegate {
         evento.favorite = !evento.favorite
         eventManager.setFavorite(eventId: evento.eventId, favorite: evento.favorite)
         favoriteListener?.onFavoriteChange(eventId: evento.eventId, favorite: evento.favorite)
+        favButton.accessibilityLabel = evento.favorite ? "Si es favorito" : "No es favorito"
+        favButton.accessibilityHint = evento.favorite ? "Toca dos veces para eliminar de favoritos" : "Toca dos veces para añadir a favoritos"
     }
     
     @IBAction func onAssistClick(_ sender: Any) {

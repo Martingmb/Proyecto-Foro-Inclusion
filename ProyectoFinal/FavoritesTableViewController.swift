@@ -44,7 +44,8 @@ class FavoritesTableViewController: UITableViewController, FavoriteListener {
         cell.ambitoLabel.text = event.ambito
         
         let df = DateFormatter()
-        df.dateFormat = "dd/MMM/YY"
+        df.locale = Locale(identifier: "es-MX")
+        df.dateFormat = "EEEE, MMM d - hh:mm a"
         cell.dateLabel.text = df.string(from: event.date)
         return cell
     }

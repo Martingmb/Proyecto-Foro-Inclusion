@@ -18,6 +18,11 @@ class TableViewCustomCellEvents: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        
+        
+        
+        
         // Initialization code
     }
 
@@ -25,5 +30,14 @@ class TableViewCustomCellEvents: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
+    
+ /*   func convertirFecha(fecha: String) -> String {
+        
+        
+        
+        
+    }*/
+    
+    
 
 }

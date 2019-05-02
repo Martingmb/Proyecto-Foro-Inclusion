@@ -23,8 +23,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var ivSponsors: UIImageView!
-    @IBOutlet weak var btLeftImage: UIButton!
-    @IBOutlet weak var btRightImage: UIButton!
+    
+    @IBOutlet weak var btMenu: UIBarButtonItem!
+    @IBOutlet weak var btSearch: UIBarButtonItem!
+    
+    
+    
+    
+    
+    
     var reference: DatabaseReference!
     var refreshControl : UIRefreshControl!
     
@@ -49,6 +56,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         SideMenuManager.defaultManager.menuFadeStatusBar = false
         
         definesPresentationContext = true
+        
+        
+        //------------Accesibilidad
+        btMenu.accessibilityLabel = "Menú"
+        btMenu.accessibilityHint = "Toca dos veces para desplegar o cerrar el menú"
+        
+        btSearch.accessibilityLabel = "Búsqueda"
+        btSearch.accessibilityHint = "Toca dos veces para realizar una búsqueda de eventos"
+        
+        
     }
     
     func logoSlideshow() {
@@ -97,7 +114,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.tfTitle.text = event.name
     
         let df = DateFormatter()
-        df.dateFormat = "dd/MMM/YY"
+        df.locale = Locale(identifier: "es-MX")
+        df.dateFormat = "EEEE, MMM d, yyyy"
         cell.tfDate.text = df.string(from: event.date)
     
         return cell
@@ -220,7 +238,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if(fecha != nil){
                 // Esto es una tonteria pero funciona.
                 let df = DateFormatter()
-                df.dateFormat = "dd/MMM/YY"
+                df.dateFormat = "MMMM d, YYYY"
                 f = df.string(from: e.date) == df.string(from: fecha!)
             }
             if(text.count>0){

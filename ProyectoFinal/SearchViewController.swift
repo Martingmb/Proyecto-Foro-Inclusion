@@ -54,6 +54,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         filterData[1] += filteredEvents.map({ (e) -> String in
             return e.discapacidad
         })
+        
+        //------------Accesibilidad
+        searchBar.accessibilityLabel = "Campo de búsqueda para buscar un evento"
+        searchBar.accessibilityHint = "Toca dos veces para editar"
+        
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -99,7 +105,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.tfAmbito.text = event.ambito
             
             let dateFormatterGet = DateFormatter()
-            dateFormatterGet.dateFormat = "dd/MMM/YY - h:mm a"
+            dateFormatterGet.locale = Locale(identifier: "es-MX")
+            dateFormatterGet.dateFormat = "EEEE, MMM d - hh:mm a"
             cell.tfDate.text = dateFormatterGet.string(from: event.date)
             return cell
         }
@@ -153,7 +160,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBAction func datePickerChanged(_ picker: UIDatePicker) {
         let df = DateFormatter()
-        df.dateFormat = "dd/MMM/YY"
+        df.locale = Locale(identifier: "es-MX")
+        df.dateFormat = "EEEE, MMM d"
         filterTableView.cellForRow(at: IndexPath(row: changingFilter, section: 0))?.detailTextLabel?.text = df.string(from: picker.date)
         setFilterDate = picker.date
         refreshEvents()
