@@ -48,12 +48,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         view.addGestureRecognizer(tapGesture)
         
         filteredEvents = eventManager.getEvents()
-        filterData[0] += filteredEvents.map({ (e) -> String in
+        filterData[0] += Array(Set(filteredEvents.map({ (e) -> String in
             return e.ambito
-        })
-        filterData[1] += filteredEvents.map({ (e) -> String in
+        })))
+        filterData[1] += Array(Set(filteredEvents.map({ (e) -> String in
             return e.discapacidad
-        })
+        })))
         
         //------------Accesibilidad
         searchBar.accessibilityLabel = "Campo de búsqueda para buscar un evento"
@@ -135,6 +135,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func showPicker(data : [String]){
+        picker.selectedRow(inComponent: 0)
         pickerData = data
         picker.reloadAllComponents()
         picker.isHidden = false
