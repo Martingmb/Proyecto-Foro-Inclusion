@@ -50,8 +50,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         //------------Accesibilidad
-        btMenu.accessibilityLabel = "Menú"
-        btMenu.accessibilityHint = "Toca dos veces para desplegar o cerrar el menú"
+        btMenu.accessibilityLabel = "Favoritos"
+        btMenu.accessibilityHint = "Toca dos veces para ver tus favoritos"
         
         btSearch.accessibilityLabel = "Búsqueda"
         btSearch.accessibilityHint = "Toca dos veces para realizar una búsqueda de eventos"
