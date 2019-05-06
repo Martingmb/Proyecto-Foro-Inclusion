@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SideMenu
 import FirebaseDatabase
 
 protocol EventMangager {
@@ -26,11 +25,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var btMenu: UIBarButtonItem!
     @IBOutlet weak var btSearch: UIBarButtonItem!
-    
-    
-    
-    
-    
     
     var reference: DatabaseReference!
     var refreshControl : UIRefreshControl!
@@ -51,9 +45,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         logoSlideshow()
         let _ = refreshEvents()
-
-        // Side menu
-        SideMenuManager.defaultManager.menuFadeStatusBar = false
         
         definesPresentationContext = true
         
@@ -131,9 +122,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         } else if segue.identifier == "filter" {
             let vc = segue.destination as! SearchViewController
             vc.eventManager = self
-        } else if segue.identifier == "sideMenu" {
-            let nc = segue.destination as! UISideMenuNavigationController
-            let vc = nc.viewControllers.first as! SideMenuTableViewController
+        } else if segue.identifier == "favorites" {
+            let vc = segue.destination as! FavoritesTableViewController
             vc.eventManager = self
         }
     }
